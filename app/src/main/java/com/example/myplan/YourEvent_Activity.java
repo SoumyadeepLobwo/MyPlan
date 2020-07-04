@@ -1,6 +1,5 @@
 package com.example.myplan;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.icu.text.MessagePattern.ArgType.SELECT;
 
 public class YourEvent_Activity extends AppCompatActivity {
     List<Event> data = new ArrayList<>();
@@ -38,10 +35,26 @@ public class YourEvent_Activity extends AppCompatActivity {
     private void extractAndPopulateEventList() {
 
         //opening the database in the particular path
-        SQLiteDatabase db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath()+"/"+AddActivity.DB_FILE,null,SQLiteDatabase.OPEN_READONLY);
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath()+"/"+AddActivity.DB_FILE,null,SQLiteDatabase.CREATE_IF_NECESSARY|SQLiteDatabase.OPEN_READWRITE);
+        db.execSQL("create table if not exists " + AddActivity.DB_TABLE + " (" +
+                AddActivity.DB_ID + " Integer Primary Key, " +
+                AddActivity.DB_UNIQUEID + " text, " +
+                AddActivity.DB_DESCRIPTION + " text, " +
+                AddActivity.DB_DATE + " text, " +
+                AddActivity.DB_DAY + " text, " +
+                AddActivity.DB_MONTH + " text, " +
+                AddActivity.DB_YEAR + " text, " +
+                AddActivity.DB_TIME + " text, " +
+                AddActivity.DB_HRS + " text, " +
+                AddActivity.DB_MIN + " text,  " +
+                AddActivity.DB_DATE_TIME + " text, " +
+                AddActivity.DB_NOTIFY + " text, " +
+                AddActivity.DB_AMPM + " text)");
+
 
         String[] projection={
                 AddActivity.DB_ID,
+                AddActivity.DB_UNIQUEID,
                 AddActivity.DB_DESCRIPTION,
                 AddActivity.DB_DATE,
                 AddActivity.DB_DAY,
@@ -68,7 +81,17 @@ public class YourEvent_Activity extends AppCompatActivity {
 
                 data.add(newEvent);
             }
+            TextView noEventMessage;
+            if(cursor.getCount() == 0){
+                noEventMessage=findViewById(R.id.no_event_message);
+                noEventMessage.setVisibility(View.VISIBLE);
+            }
+            else {
+                noEventMessage=findViewById(R.id.no_event_message);
+                noEventMessage.setVisibility(View.INVISIBLE);
+            }
         }
+
     }
 
     public void onClickYourEventActPrev(View view){

@@ -20,21 +20,21 @@ import java.util.UUID;
 public class AddActivity extends AppCompatActivity {
 
     //sqlite table features
-    final static String DB_FILE = "events.db";//name of the file containing the table
-    final static String DB_TABLE = "events_table";//name of the table
-    final static String DB_ID = "id";
-    final static String DB_UNIQUEID = "unique_id";// column representing id(i.e.,row number for convinience)
-    final static String DB_DESCRIPTION = "description";//column name representing the description
-    final static String DB_DATE = "date";//column name representing the date
-    final static String DB_DAY = "day";
-    final static String DB_MONTH = "month";//column name representing the month
-    final static String DB_YEAR = "year";//column name representing the year
-    final static String DB_HRS = "hrs";//column name representing the hrs
-    final static String DB_MIN = "min";//column name representing the min
-    final static String DB_AMPM = "ampm";//column name representing ampm
-    final static String DB_NOTIFY = "notify";//column name representing the notification period
-    final static String DB_DATE_TIME = "date_time";//column for the complete date
-    final static String DB_TIME = "time";
+    public final static String DB_FILE = "events.db";//name of the file containing the table
+    public final static String DB_TABLE = "events_table";//name of the table
+    public final static String DB_ID = "id";
+    public final static String DB_UNIQUEID = "unique_id";// column representing id(i.e.,row number for convinience)
+    public final static String DB_DESCRIPTION = "description";//column name representing the description
+    public final static String DB_DATE = "date";//column name representing the date
+    public final static String DB_DAY = "day";
+    public final static String DB_MONTH = "month";//column name representing the month
+    public final static String DB_YEAR = "year";//column name representing the year
+    public final static String DB_HRS = "hrs";//column name representing the hrs
+    public final static String DB_MIN = "min";//column name representing the min
+    public final static String DB_AMPM = "ampm";//column name representing ampm
+    public final static String DB_NOTIFY = "notify";//column name representing the notification period
+    public final static String DB_DATE_TIME = "date_time";//column for the complete date
+    public final static String DB_TIME = "time";
 
 
     public EditText description1, day1, hrs1, min1, month1, year1;
