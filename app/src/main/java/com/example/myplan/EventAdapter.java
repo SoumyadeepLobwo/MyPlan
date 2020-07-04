@@ -42,9 +42,12 @@ public class EventAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.your_event_layout, null);//inflate layout in View
 
-        TextView descriptionText, timeText, dateText;//for the three textviews of the layout
+        TextView descriptionText, timeText, dateText, uuidText;//for the three textviews of the layout
 
         //setting required details of the Event with index i
+        uuidText = contentView.findViewById(R.id.uuid_text);
+        uuidText.setText(getItem(i).uniqueID);
+
         descriptionText = contentView.findViewById(R.id.description_show);
         descriptionText.setText(getItem(i).description);
 

@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,26 +19,42 @@ import java.util.List;
 
 public class YourEvent_Activity extends AppCompatActivity {
     List<Event> data = new ArrayList<>();
+    //opening the database
+    private SQLiteDatabase db;
+    EventAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_event_);
 
+        db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath()+"/"+AddActivity.DB_FILE,null,SQLiteDatabase.CREATE_IF_NECESSARY|SQLiteDatabase.OPEN_READWRITE);
         extractAndPopulateEventList();
 
-        EventAdapter adapter = new EventAdapter(YourEvent_Activity.this, data);
+        adapter = new EventAdapter(YourEvent_Activity.this, data);
         ListView listView = findViewById(R.id.list_view_your_event);
         listView.setAdapter(adapter);
     }
-    public void onclickDelete(View view) {
-        //SQLiteDatabase db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath()+"/"+AddActivity.DB_TABLE,null,SQLiteDatabase.OPEN_READWRITE|SQLiteDatabase.OPEN_READONLY);
+    public void onClickDelete(View view) {
+        String uuid;
+        View parent = (View) view.getParent();
+        TextView uuidText = parent.findViewById(R.id.uuid_text);
+        uuid = uuidText.getText().toString();
+        db.delete(AddActivity.DB_TABLE, AddActivity.DB_UNIQUEID+" = \""+uuid+"\"", null);
+        for(int i=0; i<data.size(); i++)
+        {
+            if (uuid.equals(data.get(i).uniqueID)) {
+                data.remove(i);
+                break;
+            }
+        }
+        adapter.notifyDataSetChanged();//refreshes the list view after one item is deleted
     }
 
     private void extractAndPopulateEventList() {
 
         //opening the database in the particular path
-        SQLiteDatabase db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath()+"/"+AddActivity.DB_FILE,null,SQLiteDatabase.CREATE_IF_NECESSARY|SQLiteDatabase.OPEN_READWRITE);
         db.execSQL("create table if not exists " + AddActivity.DB_TABLE + " (" +
                 AddActivity.DB_ID + " Integer Primary Key, " +
                 AddActivity.DB_UNIQUEID + " text, " +
@@ -78,6 +97,7 @@ public class YourEvent_Activity extends AppCompatActivity {
                 newEvent.date = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_DATE));
                 newEvent.time = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_TIME));
                 newEvent.ampm = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_AMPM));
+                newEvent.uniqueID=cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_UNIQUEID));
 
                 data.add(newEvent);
             }
