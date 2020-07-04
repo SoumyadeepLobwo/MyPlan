@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
-
+import java.util.UUID;
 
 
 public class AddActivity extends AppCompatActivity {
@@ -22,7 +22,8 @@ public class AddActivity extends AppCompatActivity {
     //sqlite table features
     final static String DB_FILE = "events.db";//name of the file containing the table
     final static String DB_TABLE = "events_table";//name of the table
-    final static String DB_ID = "id";// column representing id(i.e.,row number for convinience)
+    final static String DB_ID = "id";
+    final static String DB_UNIQUEID = "unique_id";// column representing id(i.e.,row number for convinience)
     final static String DB_DESCRIPTION = "description";//column name representing the description
     final static String DB_DATE = "date";//column name representing the date
     final static String DB_DAY = "day";
@@ -80,7 +81,7 @@ public class AddActivity extends AppCompatActivity {
         //in the first line findView..... method takes the id of the edittexts and returns an instance that we intend to store in description1and so on
         //in the second line we are retrieving the text part and converting it into String
 
-        String ID;//create unique id
+        String uniqueID= UUID.randomUUID().toString();//create unique id
 
         description1 = findViewById(R.id.add_edit_text);
         description = description1.getText().toString();
@@ -141,6 +142,7 @@ public class AddActivity extends AppCompatActivity {
             //create sql table
             db.execSQL("create table if not exists " + DB_TABLE + " (" +
                     DB_ID + " Integer Primary Key, " +
+                    DB_UNIQUEID + " text, " +
                     DB_DESCRIPTION + " text, " +
                     DB_DATE + " text, " +
                     DB_DAY + " text, " +
@@ -154,6 +156,7 @@ public class AddActivity extends AppCompatActivity {
                     DB_AMPM + " text)");
 
             ContentValues values = new ContentValues();
+            values.put(DB_UNIQUEID, uniqueID);
             values.put(DB_DESCRIPTION, description);
             values.put(DB_DATE, date);
             values.put(DB_DAY, day_1);

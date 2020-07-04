@@ -31,6 +31,9 @@ public class YourEvent_Activity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view_your_event);
         listView.setAdapter(adapter);
     }
+  //  public void onclickDelete(View view) {
+  //      SQLiteDatabase db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath(),null,SQLiteDatabase.OPEN_READWRITE|SQLiteDatabase.OPEN_READONLY);
+  //  }
 
     private void extractAndPopulateEventList() {
 
