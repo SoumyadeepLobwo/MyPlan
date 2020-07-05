@@ -33,29 +33,49 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/deleteButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onClickSeeOrUpdate"/>
+    <ImageView
+        android:id="@+id/date_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description_show"
+        android:src="@drawable/ic_baseline_calendar_today_24"/>
     <TextView
         android:id="@+id/date_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:textSize="15sp"
         android:text="date"
         app:layout_constraintTop_toBottomOf="@id/description_show"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toEndOf="@id/date_image"/>
+    <ImageView
+        android:id="@+id/time_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toEndOf="@id/date_show"
+        app:layout_constraintTop_toBottomOf="@id/description_show"
+        android:src="@drawable/ic_baseline_access_time_24"/>
     <TextView
         android:id="@+id/time_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:textSize="15sp"
         android:text="time"
         app:layout_constraintTop_toBottomOf="@id/description_show"
-        app:layout_constraintStart_toEndOf="@id/date_show"/>
+        app:layout_constraintStart_toEndOf="@id/time_image"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

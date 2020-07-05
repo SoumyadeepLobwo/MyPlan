@@ -101,6 +101,31 @@ public class AddActivity extends AppCompatActivity {
         }
         else{
 
+            //checking date validity
+            if(! isLeap(Integer.parseInt(year))){
+                if((month.equals("2") || month.equals("02")) && Integer.parseInt(day)>28) {
+                    Toast.makeText(AddActivity.this, "Invalid day as " + year + " is not a leap year", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                if( Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12) {
+                    if((month.equals("2")||month.equals("02")) && Integer.parseInt(day)<1)
+                        Toast.makeText(AddActivity.this, "Invalid day",Toast.LENGTH_SHORT).show();
+                    if (Integer.parseInt(month) == 1 || Integer.parseInt(month) == 3 ||Integer.parseInt(month) == 5 || Integer.parseInt(month) == 7 || Integer.parseInt(month) == 8 || Integer.parseInt(month) == 10 || Integer.parseInt(month) == 12 ){
+                        if(Integer.parseInt(day) < 1 && Integer.parseInt(day) > 31) {
+                            Toast.makeText(AddActivity.this, "Invalid day",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            if(Integer.parseInt(day) < 1 && Integer.parseInt(day) > 30)
+                            Toast.makeText(AddActivity.this, "Invalid day",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else
+                    Toast.makeText(AddActivity.this, "Invalid month",Toast.LENGTH_SHORT).show();
+            }
+            //checking time validity
+
             //adding the day, month and year to form a single date
             if(Integer.parseInt(day)>=1 && Integer.parseInt(day)<=9)
                 day_1 = "0" + day;
@@ -175,5 +200,12 @@ public class AddActivity extends AppCompatActivity {
 
             onBackPressed();
         }
+    }
+    private boolean isLeap(int year){
+
+        if (((year % 4 == 0) && (year % 100!= 0)) || (year%400 == 0))
+            return  true;
+        else
+            return false;
     }
 }

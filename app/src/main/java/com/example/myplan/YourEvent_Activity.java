@@ -2,11 +2,13 @@ package com.example.myplan;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -36,20 +38,27 @@ public class YourEvent_Activity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view_your_event);
         listView.setAdapter(adapter);
     }
+    public static String uuid = "";
     public void onClickDelete(View view) {
-        String uuid;
         View parent = (View) view.getParent();
         TextView uuidText = parent.findViewById(R.id.uuid_text);
-        uuid = uuidText.getText().toString();
+        String uuid1 = uuidText.getText().toString();
         db.delete(AddActivity.DB_TABLE, AddActivity.DB_UNIQUEID+" = \""+uuid+"\"", null);
         for(int i=0; i<data.size(); i++)
         {
-            if (uuid.equals(data.get(i).uniqueID)) {
+            if (uuid1.equals(data.get(i).uniqueID)) {
                 data.remove(i);
                 break;
             }
         }
         adapter.notifyDataSetChanged();//refreshes the list view after one item is deleted
+    }
+    public void onClickSeeOrUpdate(View view){
+        View parent = (View) view.getParent();
+        TextView uuidText = parent.findViewById(R.id.uuid_text);
+        uuid = uuidText.getText().toString();
+        Intent intent = new Intent(YourEvent_Activity.this, SeeOrUpdate.class);
+        startActivity(intent);
     }
 
     private void extractAndPopulateEventList() {

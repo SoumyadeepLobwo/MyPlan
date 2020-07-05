@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SeeOrUpdate">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/add_appbar"
+
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/arrow_prev_act"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_back_24"
+                android:onClick="onClickAddActPrev"
+                android:clickable="true"
+                android:background="@null"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp" />
+            <TextView
+                android:id="@+id/add_event_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:fontFamily="monospace"
+                android:text="Event Details"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/arrow_prev_act"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nested_constraint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/add_appbar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/add_description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="56dp"
+            android:text="Event : "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@id/nested_constraint"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="48dp" />
+
+        <EditText
+            android:id="@+id/add_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:hint="Description within 50 characters"
+            android:inputType="text"
+            android:layout_marginRight="0dp"
+            android:maxLength="50"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_description_text"
+            app:layout_constraintLeft_toRightOf="@id/add_description_text" />
+
+        <TextView
+            android:id="@+id/add_day_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="32dp"
+            android:text="Event Day :"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_description_text" />
+
+        <EditText
+            android:id="@+id/add_day_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="dd"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_day_text"
+            app:layout_constraintLeft_toRightOf="@id/add_day_text" />
+
+        <TextView
+            android:id="@+id/add_month_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Month :"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/add_day_edit_text"
+            app:layout_constraintBaseline_toBaselineOf="@id/add_day_text" />
+
+        <EditText
+            android:id="@+id/add_month_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="mm"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_month_text"
+            app:layout_constraintLeft_toRightOf="@id/add_month_text"
+            />
+
+        <TextView
+            android:id="@+id/add_year_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Year :"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/add_month_edit_text"
+            app:layout_constraintBaseline_toBaselineOf="@id/add_day_text" />
+
+        <EditText
+            android:id="@+id/add_year_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="yyyy"
+            android:inputType="number"
+            android:maxLength="4"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_year_text"
+            app:layout_constraintLeft_toRightOf="@id/add_year_text" />
+
+
+        <TextView
+            android:id="@+id/add_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="32dp"
+            android:text="Time :"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_day_text" />
+
+        <EditText
+            android:id="@+id/add_time_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:hint="hrs"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_time_text"
+            app:layout_constraintLeft_toRightOf="@id/add_time_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" : "
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_time_edit_text"
+            app:layout_constraintLeft_toRightOf="@id/add_time_edit_text" />
+        />
+
+        <EditText
+            android:id="@+id/add_time_2_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:hint="min"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_time_text"
+            app:layout_constraintLeft_toRightOf="@id/add_time_edit_text" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintTop_toTopOf="@id/add_time_2_edit_text"
+            app:layout_constraintBottom_toBottomOf="@id/add_time_2_edit_text"
+            app:layout_constraintLeft_toRightOf="@id/add_time_2_edit_text">
+            <RadioButton
+                android:id="@+id/am_radio_button"
+                android:onClick="onClickAm"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A.M."/>
+            <RadioButton
+                android:id="@+id/pm_radio_button"
+                android:onClick="onClickPm"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="P.M." />
+        </RadioGroup>
+        <TextView
+            android:id="@+id/add_notify_me_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="32dp"
+            android:text="Notify me :"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_time_text" />
+
+
+        <RadioGroup
+            android:id="@+id/radio_group_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="@id/add_notify_me_text"
+            app:layout_constraintLeft_toRightOf="@id/add_notify_me_text">
+            <RadioButton
+                android:id="@+id/once_radio_button"
+                android:onClick="onClickONCE"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Once"/>
+            <RadioButton
+                android:id="@+id/daily_radio_button"
+                android:onClick="onClickDAILY"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Daily" />
+            <RadioButton
+                android:id="@+id/weekly_radio_button"
+                android:onClick="onClickWEEKLY"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Weekly" />
+            <RadioButton
+                android:id="@+id/monthly_radio_button"
+                android:onClick="onClickMONTHLY"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monthly" />
+            <RadioButton
+                android:id="@+id/yearly_radio_button"
+                android:onClick="onClickYEARLY"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yearly" />
+        </RadioGroup>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DONE"
+            app:layout_constraintTop_toBottomOf="@id/radio_group_notify"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="32dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="24dp"
+            android:onClick="onClickAddActDone"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
