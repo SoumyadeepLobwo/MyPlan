@@ -46,7 +46,7 @@ public class CalenderActivity extends AppCompatActivity {
             //this function is called only when a different date is selected from the calendar view
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
-                String daystr=day+"",monthstr=month+"";
+                String daystr=day+"",monthstr=month+1+""; //changed by teeon "month+1"
                 if(day<10) daystr = "0"+daystr;
                 if(month<10) monthstr = "0"+monthstr;
                 selectedDate = year+"-"+monthstr+"-"+daystr;
