@@ -119,6 +119,7 @@ public class SeeOrUpdate extends AppCompatActivity {
     }
 
     public void onClickAddActDone(View view) {
+
         description1 = findViewById(R.id.add_edit_text);
         description = description1.getText().toString();
         day1 = findViewById(R.id.add_day_edit_text);
@@ -217,7 +218,8 @@ public class SeeOrUpdate extends AppCompatActivity {
                     + AddActivity.DB_DATE_TIME + " = \""+ date_time +"\" , "
                     + AddActivity.DB_NOTIFY + " = " + notify + " , "
                     + AddActivity.DB_AMPM + " = " +ampm+ " WHERE " + AddActivity.DB_UNIQUEID + " = " + YourEvent_Activity.uuid + ";");//showing error near where syntax error*/
-
+            Intent intent = new Intent(SeeOrUpdate.this, OneActivity.class);
+            onBackPressed();
         }
     }
     public void onClickAddActPrev(View view)
