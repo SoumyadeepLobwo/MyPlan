@@ -2,6 +2,7 @@ package com.example.myplan;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -190,7 +191,21 @@ public class SeeOrUpdate extends AppCompatActivity {
             date_time = date + " " + time;//forming the SQL format for date and time
 
             db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath() + "/" + AddActivity.DB_FILE, null, SQLiteDatabase.OPEN_READWRITE);
-            db.execSQL("UPDATE " + AddActivity.DB_TABLE + " SET "
+            ContentValues values = new ContentValues();
+            values.put(AddActivity.DB_DESCRIPTION, description);
+            values.put(AddActivity.DB_DATE, date);
+            values.put(AddActivity.DB_DAY, day_1);
+            values.put(AddActivity.DB_MONTH, month_1);
+            values.put(AddActivity.DB_YEAR, year);
+            values.put(AddActivity.DB_TIME, time);
+            values.put(AddActivity.DB_HRS, hrs_1);
+            values.put(AddActivity.DB_MIN, min_1);
+            values.put(AddActivity.DB_DATE_TIME, date_time);
+            values.put(AddActivity.DB_NOTIFY, notify);
+            values.put(AddActivity.DB_AMPM, ampm);
+
+            db.update(AddActivity.DB_TABLE, values , AddActivity.DB_UNIQUEID+" = \""+YourEvent_Activity.uuid+"\"", null);
+            /*db.execSQL("UPDATE " + AddActivity.DB_TABLE + " SET "
                     + AddActivity.DB_DESCRIPTION + " = " + description + " , "
                     + AddActivity.DB_DATE + " = \""+ date +"\" , "
                     + AddActivity.DB_DAY + " = " + day + " , "
@@ -201,7 +216,7 @@ public class SeeOrUpdate extends AppCompatActivity {
                     + AddActivity.DB_MIN + " = " + min_1 + " , "
                     + AddActivity.DB_DATE_TIME + " = \""+ date_time +"\" , "
                     + AddActivity.DB_NOTIFY + " = " + notify + " , "
-                    + AddActivity.DB_AMPM + " = " +ampm+ " WHERE " + AddActivity.DB_UNIQUEID + " = " + YourEvent_Activity.uuid + ";");
+                    + AddActivity.DB_AMPM + " = " +ampm+ " WHERE " + AddActivity.DB_UNIQUEID + " = " + YourEvent_Activity.uuid + ";");//showing error near where syntax error*/
 
         }
     }
