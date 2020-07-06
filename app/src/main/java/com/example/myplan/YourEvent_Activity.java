@@ -31,6 +31,7 @@ public class YourEvent_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_event_);
 
+        //opening the database
         db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath()+"/"+AddActivity.DB_FILE,null,SQLiteDatabase.CREATE_IF_NECESSARY|SQLiteDatabase.OPEN_READWRITE);
         extractAndPopulateEventList();
 
@@ -38,12 +39,12 @@ public class YourEvent_Activity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view_your_event);
         listView.setAdapter(adapter);
     }
-    public static String uuid = "";
+    //public static String uuid = "";
     public void onClickDelete(View view) {
         View parent = (View) view.getParent();
         TextView uuidText = parent.findViewById(R.id.uuid_text);
         String uuid1 = uuidText.getText().toString();
-        db.delete(AddActivity.DB_TABLE, AddActivity.DB_UNIQUEID+" = \""+uuid+"\"", null);
+        db.delete(AddActivity.DB_TABLE, AddActivity.DB_UNIQUEID+" = \""+uuid1+"\"", null);
         for(int i=0; i<data.size(); i++)
         {
             if (uuid1.equals(data.get(i).uniqueID)) {
@@ -56,8 +57,12 @@ public class YourEvent_Activity extends AppCompatActivity {
     public void onClickSeeOrUpdate(View view){
         View parent = (View) view.getParent();
         TextView uuidText = parent.findViewById(R.id.uuid_text);
-        uuid = uuidText.getText().toString();
+        String uuid = uuidText.getText().toString();
         Intent intent = new Intent(YourEvent_Activity.this, SeeOrUpdate.class);
+
+        //passing the the uuid as string extra from this activity to SeeOrUpdate
+        intent.putExtra("uuid", uuid);
+
         startActivity(intent);
     }
 
@@ -124,7 +129,6 @@ public class YourEvent_Activity extends AppCompatActivity {
     }
 
     public void onClickYourEventActPrev(View view){
-        Intent intent=new Intent(YourEvent_Activity.this, OneActivity.class);
         onBackPressed();
     }
 }

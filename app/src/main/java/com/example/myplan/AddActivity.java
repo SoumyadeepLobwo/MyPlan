@@ -75,7 +75,7 @@ public class AddActivity extends AppCompatActivity {
     public void onClickAddActPrev(View view){ onBackPressed();}
     public void onClickAddActDone(View view){
 
-        Intent intent=new Intent(AddActivity.this, OneActivity.class);
+        //Intent intent=new Intent(AddActivity.this, OneActivity.class);
 
         //extracting data from the eidttext portions of addactivity.
         //in the first line findView..... method takes the id of the edittexts and returns an instance that we intend to store in description1and so on
@@ -96,110 +96,117 @@ public class AddActivity extends AppCompatActivity {
         min1 = findViewById(R.id.add_time_2_edit_text);
         min = min1.getText().toString();
 
+        boolean validity = true;
+
         if(description.equals("") || day.equals("") || hrs.equals("") || min.equals("") || ampm.equals("") || notify.equals("")) {
             Toast.makeText(AddActivity.this, "All details not entered ", Toast.LENGTH_SHORT).show();
+            validity = false;
         }
-        else{
 
-            //checking date validity
-            if(! isLeap(Integer.parseInt(year))){
-                if((month.equals("2") || month.equals("02")) && Integer.parseInt(day)>28) {
-                    Toast.makeText(AddActivity.this, "Invalid day as " + year + " is not a leap year", Toast.LENGTH_SHORT).show();
+
+        //checking date validity
+        if (!isLeap(Integer.parseInt(year))) {
+            if ((month.equals("2") || month.equals("02")) && Integer.parseInt(day) > 28) {
+                Toast.makeText(AddActivity.this, "Invalid day as " + year + " is not a leap year", Toast.LENGTH_SHORT).show(); validity = false;
+            }
+        }
+        if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12) {
+            if ((month.equals("2") || month.equals("02")) && Integer.parseInt(day) < 1 || Integer.parseInt(day)>29) {
+                Toast.makeText(AddActivity.this, "Invalid day", Toast.LENGTH_SHORT).show();
+                validity = false;
+            }
+            if (Integer.parseInt(month) == 1 || Integer.parseInt(month) == 3 || Integer.parseInt(month) == 5 || Integer.parseInt(month) == 7 || Integer.parseInt(month) == 8 || Integer.parseInt(month) == 10 || Integer.parseInt(month) == 12) {
+                if (Integer.parseInt(day) < 1 && Integer.parseInt(day) > 31) {
+                    Toast.makeText(AddActivity.this, "Invalid day", Toast.LENGTH_SHORT).show(); validity = false;
                 }
             }
-            else{
-                if( Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12) {
-                    if((month.equals("2")||month.equals("02")) && Integer.parseInt(day)<1)
-                        Toast.makeText(AddActivity.this, "Invalid day",Toast.LENGTH_SHORT).show();
-                    if (Integer.parseInt(month) == 1 || Integer.parseInt(month) == 3 ||Integer.parseInt(month) == 5 || Integer.parseInt(month) == 7 || Integer.parseInt(month) == 8 || Integer.parseInt(month) == 10 || Integer.parseInt(month) == 12 ){
-                        if(Integer.parseInt(day) < 1 && Integer.parseInt(day) > 31) {
-                            Toast.makeText(AddActivity.this, "Invalid day",Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            if(Integer.parseInt(day) < 1 && Integer.parseInt(day) > 30)
-                            Toast.makeText(AddActivity.this, "Invalid day",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                else
-                    Toast.makeText(AddActivity.this, "Invalid month",Toast.LENGTH_SHORT).show();
+            else if (Integer.parseInt(month) == 4 || Integer.parseInt(month) == 6 || Integer.parseInt(month) == 9 || Integer.parseInt(month) == 11) {
+                if (Integer.parseInt(day) < 1 && Integer.parseInt(day) > 30)
+                    Toast.makeText(AddActivity.this, "Invalid day", Toast.LENGTH_SHORT).show(); validity = false;
             }
-            //checking time validity
-
-            //adding the day, month and year to form a single date
-            if(Integer.parseInt(day)>=1 && Integer.parseInt(day)<=9)
-                day_1 = "0" + day;
-            else
-                day_1 = day;
-            if(Integer.parseInt(month)>=1 && Integer.parseInt(month)<=9)
-                month_1 = "0"+month;
-            else
-                month_1 = month;
-            date = year+"-"+month_1+"-"+day_1;//forming the sql format date
-
-            if(Integer.parseInt(hrs)>=1 && Integer.parseInt(hrs)<=9)
-                hrs_1 = "0" + hrs;
-            else
-                hrs_1 = hrs;
-            if(Integer.parseInt(min)>=1 && Integer.parseInt(min)<=9)
-                min_1 = "0" + min;
-            else min_1 = min;
-            //converting from 12 hr format to 24 hr format by checking conditions
-            if(ampm =="P.M.") {
-                if (hrs_1 != "12")
-                    hrs_1 = Integer.toString(Integer.parseInt(hrs) + 12);
-            }
-            if(ampm == "A.M."){
-                if(hrs_1 == "12")
-                    hrs_1 = "00";
-            }
-
-            time=hrs_1+":"+min_1+":00";//time with hrs, min and also seconds asserted to be 00
-
-            date_time=date+" "+time;//forming the SQL format for date and time
-
-            // open sql db
-            File database = new File( getFilesDir() + "/" + DB_FILE);
-            SQLiteDatabase db = SQLiteDatabase.openDatabase(database.getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE|SQLiteDatabase.CREATE_IF_NECESSARY);
-            db.disableWriteAheadLogging();//we need to disable so that the database is functional in android  versions 9 and above
-            //Log.i("File Path", getFilesDir().getAbsolutePath());
-
-            //create sql table
-            db.execSQL("create table if not exists " + DB_TABLE + " (" +
-                    DB_ID + " Integer Primary Key, " +
-                    DB_UNIQUEID + " text, " +
-                    DB_DESCRIPTION + " text, " +
-                    DB_DATE + " text, " +
-                    DB_DAY + " text, " +
-                    DB_MONTH + " text, " +
-                    DB_YEAR + " text, " +
-                    DB_TIME + " text, " +
-                    DB_HRS + " text, " +
-                    DB_MIN + " text,  " +
-                    DB_DATE_TIME + " text, " +
-                    DB_NOTIFY + " text, " +
-                    DB_AMPM + " text)");
-
-            ContentValues values = new ContentValues();
-            values.put(DB_UNIQUEID, uniqueID);
-            values.put(DB_DESCRIPTION, description);
-            values.put(DB_DATE, date);
-            values.put(DB_DAY, day_1);
-            values.put(DB_MONTH, month_1);
-            values.put(DB_YEAR, year);
-            values.put(DB_TIME, time);
-            values.put(DB_HRS, hrs_1);
-            values.put(DB_MIN, min_1);
-            values.put(DB_DATE_TIME, date_time);
-            values.put(DB_NOTIFY, notify);
-            values.put(DB_AMPM, ampm);
-
-            //insert a record(row) into sql table
-            db.insertOrThrow(DB_TABLE, null, values);
-            db.close();
-
-            onBackPressed();
+        } else {
+            Toast.makeText(AddActivity.this, "Invalid month", Toast.LENGTH_SHORT).show();
+            validity = false;
         }
+        //checking time validity
+
+        if(!validity) return;
+
+        //adding the day, month and year to form a single date
+        if (Integer.parseInt(day) >= 1 && Integer.parseInt(day) <= 9)
+            day_1 = "0" + day;
+        else
+            day_1 = day;
+        if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 9)
+            month_1 = "0" + month;
+        else
+            month_1 = month;
+        date = year + "-" + month_1 + "-" + day_1;//forming the sql format date
+
+        if (Integer.parseInt(hrs) >= 1 && Integer.parseInt(hrs) <= 9)
+            hrs_1 = "0" + hrs;
+        else
+            hrs_1 = hrs;
+        if (Integer.parseInt(min) >= 1 && Integer.parseInt(min) <= 9)
+            min_1 = "0" + min;
+        else min_1 = min;
+        //converting from 12 hr format to 24 hr format by checking conditions
+        if (ampm.equals("P.M.")) {
+            if (!hrs_1.equals("12"))
+                hrs_1 = Integer.toString(Integer.parseInt(hrs) + 12);
+        }
+        if (ampm.equals("A.M.")) {
+            if (hrs_1.equals("12"))
+                hrs_1 = "00";
+        }
+
+        time = hrs_1 + ":" + min_1 + ":00";//time with hrs, min and also seconds asserted to be 00
+
+        date_time = date + " " + time;//forming the SQL format for date and time
+
+        // open sql db
+        File database = new File(getFilesDir() + "/" + DB_FILE);
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(database.getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.CREATE_IF_NECESSARY);
+        db.disableWriteAheadLogging();//we need to disable so that the database is functional in android  versions 9 and above
+        //Log.i("File Path", getFilesDir().getAbsolutePath());
+
+        //create sql table
+        db.execSQL("create table if not exists " + DB_TABLE + " (" +
+                DB_ID + " Integer Primary Key, " +
+                DB_UNIQUEID + " text, " +
+                DB_DESCRIPTION + " text, " +
+                DB_DATE + " text, " +
+                DB_DAY + " text, " +
+                DB_MONTH + " text, " +
+                DB_YEAR + " text, " +
+                DB_TIME + " text, " +
+                DB_HRS + " text, " +
+                DB_MIN + " text,  " +
+                DB_DATE_TIME + " text, " +
+                DB_NOTIFY + " text, " +
+                DB_AMPM + " text)");
+
+        ContentValues values = new ContentValues();
+        values.put(DB_UNIQUEID, uniqueID);
+        values.put(DB_DESCRIPTION, description);
+        values.put(DB_DATE, date);
+        values.put(DB_DAY, day_1);
+        values.put(DB_MONTH, month_1);
+        values.put(DB_YEAR, year);
+        values.put(DB_TIME, time);
+        values.put(DB_HRS, hrs_1);
+        values.put(DB_MIN, min_1);
+        values.put(DB_DATE_TIME, date_time);
+        values.put(DB_NOTIFY, notify);
+        values.put(DB_AMPM, ampm);
+
+        //insert a record(row) into sql table
+        db.insertOrThrow(DB_TABLE, null, values);
+        db.close();
+
+        onBackPressed();
+
+
     }
     private boolean isLeap(int year){
 
