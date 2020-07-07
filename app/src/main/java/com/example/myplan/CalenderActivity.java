@@ -3,6 +3,7 @@ package com.example.myplan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,7 +24,7 @@ public class CalenderActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     EventAdapter adapter;
     ListView listView;
-    String selectedDate,currentDate;
+    String selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +34,11 @@ public class CalenderActivity extends AppCompatActivity {
         String d,m,y;//variables that will store the current day, month amd year
         Calendar calendar = Calendar.getInstance();
         y = calendar.get(Calendar.YEAR)+"";
-        m = calendar.get(Calendar.MONTH)+"";
+        m = calendar.get(Calendar.MONTH)+1+"";
         d = calendar.get(Calendar.DAY_OF_MONTH)+"";
         if(Integer.parseInt(d)<10) d = "0"+d;
-        if(Integer.parseInt(m)<10) m = "0"+m;
+        if(Integer.parseInt(m)<9) m = "0"+m;
         selectedDate = y+"-"+m+"-"+d;// this gets stored as the default current date until another date is clicked on the calendar view
-        currentDate = selectedDate;
 
 
         CalendarView calendarView = findViewById(R.id.calendarView);
@@ -49,8 +49,14 @@ public class CalenderActivity extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
                 String daystr=day+"",monthstr=month+1+""; //changed by teeon "month+1"
                 if(day<10) daystr = "0"+daystr;
-                if(month<10) monthstr = "0"+monthstr;
+                if(month<9) monthstr = "0"+monthstr;
                 selectedDate = year+"-"+monthstr+"-"+daystr;
+
+                //clears all the elements of the arraylist if any. This is because we have to add to the array list anyway when we start the activity or select a date on the calendar view.
+                //if we dont clear all the elements of the list before each extractAnd.... func call then in the list view it will display all the events present in the list. We dont
+                //want this to happen. We only want to display the events od selectedDate
+                if( data.size() > 0)
+                    data.clear();
 
                 //get data from db into events list
                 extractAndPopulateEventList();//this function is called only when another date is selected other wise the function call outside this function is executed
@@ -64,16 +70,19 @@ public class CalenderActivity extends AppCompatActivity {
 
         //opening the database
         db = SQLiteDatabase.openDatabase(getFilesDir().getAbsolutePath()+"/"+AddActivity.DB_FILE,null,SQLiteDatabase.CREATE_IF_NECESSARY|SQLiteDatabase.OPEN_READWRITE);
+
+        //clears all the elements of the arraylist if any. This is because we have to add to the array list anyway when we start the activity or select a date on the calendar view.
+        //if we dont clear all the elements of the list before each extractAnd.... func call then in the list view it will display all the events present in the list. We dont
+        //want this to happen. We only want to display the events od selectedDate
+        if( data.size() > 0)
+            data.clear();
+
         //get data from db into events list
         extractAndPopulateEventList();
 
         adapter = new EventAdapter(CalenderActivity.this, data);
         listView = findViewById(R.id.calendar_list_view);
         listView.setAdapter(adapter);
-
-    }
-
-    private void update(){
 
     }
 
@@ -105,7 +114,7 @@ public class CalenderActivity extends AppCompatActivity {
 
     private void extractAndPopulateEventList() {
 
-        //opening the database in the particular path
+        //creating the table if nescessary
         db.execSQL("create table if not exists " + AddActivity.DB_TABLE + " (" +
                 AddActivity.DB_ID + " Integer Primary Key, " +
                 AddActivity.DB_UNIQUEID + " text, " +
@@ -143,6 +152,7 @@ public class CalenderActivity extends AppCompatActivity {
         // eg: String.format("%s = \"%s\" ", AddActivity.DB_DATE, selectedDate);
         Cursor cursor = db.query(AddActivity.DB_TABLE,projection, AddActivity.DB_DATE +" = \""+selectedDate+"\"",null,null,null, order);
 
+
         TextView noEventMessage;
         if(cursor.getCount() == 0){
             noEventMessage=findViewById(R.id.no_event_message);
@@ -152,7 +162,6 @@ public class CalenderActivity extends AppCompatActivity {
             noEventMessage=findViewById(R.id.no_event_message);
             noEventMessage.setVisibility(View.INVISIBLE);
         }
-
         if(cursor!=null) {
             while (cursor.moveToNext()) {
                 Event newEvent = new Event();
@@ -164,9 +173,7 @@ public class CalenderActivity extends AppCompatActivity {
 
                 data.add(newEvent);
             }
-
         }
-
     }
 
     public void onClickCalenderActPrev(View view){ onBackPressed();   }

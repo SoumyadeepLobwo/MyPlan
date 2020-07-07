@@ -93,7 +93,7 @@
         android:id="@+id/view_separator"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="#dcedc8"
+        android:background="#ff5131"
         app:layout_constraintTop_toBottomOf="@id/add_event_layout"
         tools:layout_editor_absoluteX="0dp" />
 
