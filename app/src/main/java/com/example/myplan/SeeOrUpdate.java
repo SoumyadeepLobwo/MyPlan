@@ -80,11 +80,12 @@ public class SeeOrUpdate extends AppCompatActivity {
         uuid = getIntent().getStringExtra("uuid");
 
         Cursor cursor = db.query(AddActivity.DB_TABLE, projection, null, null, null, null, order);
-        Event event = new Event();
+        //Event event = new Event();
+        String uniqueID;
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                event.uniqueID = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_UNIQUEID));
-                if (event.uniqueID.equals(uuid)) {
+                uniqueID = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_UNIQUEID));
+                if (uniqueID.equals(uuid)) {
                     description = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_DESCRIPTION));
                     day = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_DAY));
                     month = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_MONTH));
@@ -236,19 +237,7 @@ public class SeeOrUpdate extends AppCompatActivity {
         values.put(AddActivity.DB_AMPM, ampm);
 
         db.update(AddActivity.DB_TABLE, values , AddActivity.DB_UNIQUEID+" = \""+uuid+"\"", null);
-        /*db.execSQL("UPDATE " + AddActivity.DB_TABLE + " SET "
-                + AddActivity.DB_DESCRIPTION + " = " + description + " , "
-                + AddActivity.DB_DATE + " = \""+ date +"\" , "
-                + AddActivity.DB_DAY + " = " + day + " , "
-                + AddActivity.DB_MONTH + " = " + month + " , "
-                + AddActivity.DB_YEAR + " = " + year + " , "
-                + AddActivity.DB_TIME + " = \""+ time +"\" , "
-                + AddActivity.DB_HRS + " = " + hrs_1 + " , "
-                + AddActivity.DB_MIN + " = " + min_1 + " , "
-                + AddActivity.DB_DATE_TIME + " = \""+ date_time +"\" , "
-                + AddActivity.DB_NOTIFY + " = " + notify + " , "
-                + AddActivity.DB_AMPM + " = " +ampm+ " WHERE " + AddActivity.DB_UNIQUEID + " = " + YourEvent_Activity.uuid + ";");//showing error near where syntax error*/
-        //Intent intent = new Intent(SeeOrUpdate.this, OneActivity.class);
+
         onBackPressed();
     }
     public void onClickAddActPrev(View view)

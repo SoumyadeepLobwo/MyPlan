@@ -23,7 +23,7 @@ public class CalenderActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     EventAdapter adapter;
     ListView listView;
-    String selectedDate;
+    String selectedDate,currentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public class CalenderActivity extends AppCompatActivity {
         if(Integer.parseInt(d)<10) d = "0"+d;
         if(Integer.parseInt(m)<10) m = "0"+m;
         selectedDate = y+"-"+m+"-"+d;// this gets stored as the default current date until another date is clicked on the calendar view
+        currentDate = selectedDate;
 
 
         CalendarView calendarView = findViewById(R.id.calendarView);
@@ -69,6 +70,11 @@ public class CalenderActivity extends AppCompatActivity {
         adapter = new EventAdapter(CalenderActivity.this, data);
         listView = findViewById(R.id.calendar_list_view);
         listView.setAdapter(adapter);
+
+    }
+
+    private void update(){
+
     }
 
     public void onClickDelete(View view) {
@@ -136,6 +142,17 @@ public class CalenderActivity extends AppCompatActivity {
         String order=AddActivity.DB_DATE + " ASC";//represents the order in which we want to sort the data in the table
         // eg: String.format("%s = \"%s\" ", AddActivity.DB_DATE, selectedDate);
         Cursor cursor = db.query(AddActivity.DB_TABLE,projection, AddActivity.DB_DATE +" = \""+selectedDate+"\"",null,null,null, order);
+
+        TextView noEventMessage;
+        if(cursor.getCount() == 0){
+            noEventMessage=findViewById(R.id.no_event_message);
+            noEventMessage.setVisibility(View.VISIBLE);
+        }
+        else {
+            noEventMessage=findViewById(R.id.no_event_message);
+            noEventMessage.setVisibility(View.INVISIBLE);
+        }
+
         if(cursor!=null) {
             while (cursor.moveToNext()) {
                 Event newEvent = new Event();
@@ -147,15 +164,7 @@ public class CalenderActivity extends AppCompatActivity {
 
                 data.add(newEvent);
             }
-            TextView noEventMessage;
-            if(cursor.getCount() == 0){
-                noEventMessage=findViewById(R.id.no_event_message);
-                noEventMessage.setVisibility(View.VISIBLE);
-            }
-            else {
-                noEventMessage=findViewById(R.id.no_event_message);
-                noEventMessage.setVisibility(View.INVISIBLE);
-            }
+
         }
 
     }
