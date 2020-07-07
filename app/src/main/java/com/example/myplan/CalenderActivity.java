@@ -174,6 +174,7 @@ public class CalenderActivity extends AppCompatActivity {
                 data.add(newEvent);
             }
         }
+        cursor.close();
     }
 
     public void onClickCalenderActPrev(View view){ onBackPressed();   }

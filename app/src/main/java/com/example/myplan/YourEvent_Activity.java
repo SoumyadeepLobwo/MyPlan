@@ -125,6 +125,7 @@ public class YourEvent_Activity extends AppCompatActivity {
                 noEventMessage.setVisibility(View.INVISIBLE);
             }
         }
+        cursor.close();
 
     }
 
