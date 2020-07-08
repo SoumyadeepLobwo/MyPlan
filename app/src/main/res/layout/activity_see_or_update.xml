@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:fontFamily="monospace"
-                android:text="Event Details"
+                android:text="View/Update Details"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 android:textStyle="bold"
