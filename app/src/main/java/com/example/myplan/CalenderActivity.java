@@ -34,10 +34,10 @@ public class CalenderActivity extends AppCompatActivity {
         String d,m,y;//variables that will store the current day, month amd year
         Calendar calendar = Calendar.getInstance();
         y = calendar.get(Calendar.YEAR)+"";
-        m = calendar.get(Calendar.MONTH)+1+"";
+        m = (calendar.get(Calendar.MONTH)+1)+"";
         d = calendar.get(Calendar.DAY_OF_MONTH)+"";
         if(Integer.parseInt(d)<10) d = "0"+d;
-        if(Integer.parseInt(m)<9) m = "0"+m;
+        if(Integer.parseInt(m)<10) m = "0"+m;
         selectedDate = y+"-"+m+"-"+d;// this gets stored as the default current date until another date is clicked on the calendar view
 
 

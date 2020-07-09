@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:fontFamily="monospace"
-                android:text="Add Event"
+                android:text="Events Library"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 android:textStyle="bold"

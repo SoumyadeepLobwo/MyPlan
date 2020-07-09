@@ -36,7 +36,7 @@ public class OneActivity extends AppCompatActivity {
         cd = calendar.get(Calendar.DAY_OF_MONTH);
         d = cd+"";
         if(Integer.parseInt(d)<10) d = "0"+d;
-        if(Integer.parseInt(m)<9) m = "0"+m;
+        if(Integer.parseInt(m)<10) m = "0"+m;
         currentDate = y+"-"+m+"-"+d;// this gets stored as the default current date until another date is clicked on the calendar view
 
         //opening the database and accessing all the events
@@ -78,82 +78,113 @@ public class OneActivity extends AppCompatActivity {
         String order=AddActivity.DB_DATE + " ASC";//represents the order in which we want to sort the data in the table
         // eg: String.format("%s = \"%s\" ", AddActivity.DB_DATE, selectedDate);
         Cursor cursor = db.query(AddActivity.DB_TABLE,projection, null,null,null,null, order);
-        Event e = new Event();
-        List<String> eventdatelist = new ArrayList<>();
-        String edate="";
-        int ed, em, ey;
+
+        Event e;
+
+        List<Event> eventdatelist = new ArrayList<>();
 
         if(cursor != null){
             while(cursor.moveToNext()) {
-                edate = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_DATE));
-                ey = Integer.parseInt(edate.substring(0, 4));
-                em = Integer.parseInt(edate.substring(5, 7));
-                ed = Integer.parseInt(edate.substring(8, 10));
+                e = new Event();
+                e.min = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_MIN));
+                e.hrs = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_HRS));
+                e.date_time = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_DATE_TIME));
+                e.date = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_DATE));
+                e.year = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_YEAR));
+                e.month = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_MONTH));
+                e.day = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_DAY));
+                e.notify = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_NOTIFY));
+                e.uniqueID = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_UNIQUEID));
 
-                if(ifIsSmall(ed,em,ey) == true)//condition to check if the date is before current date. returns false if the passed date matches the
+                if(ifIsSmall(Integer.parseInt(e.day),Integer.parseInt(e.month),Integer.parseInt(e.year)) == true)//condition to check if the date is before current date. returns false if the passed date matches the
                     //current date or exceeds it
                 {
-                    eventdatelist.add(edate); // extrating all the events prior to the events of current day
+                    eventdatelist.add(e); // extracting all the objects of events prior to the events of current day
                 }
             }//ending the while loop
         }
         cursor.close();
-        Cursor cursor1;
-        String notify,date_Time;
-        int n_ey,n_em,n_ed;
-        int n_ey1,n_ed1;
+
+        //Cursor cursor1;
+        String edate, notify,date_Time,uuid;
+        int ey,em,ed,emin,ehrs;
+        Calendar c;
         for(int i = 0; i < eventdatelist.size(); i++)
         {
-            edate = eventdatelist.get(i);
-            n_ey = Integer.parseInt(edate.substring(0, 4));
-            n_em = Integer.parseInt(edate.substring(5, 7));
-            n_ed = Integer.parseInt(edate.substring(8, 10));
-
-            cursor1 = db.query(AddActivity.DB_TABLE, projection, AddActivity.DB_DATE+" = \""+edate+"\"", null, null, null,null);
-            notify = cursor1.getString(cursor1.getColumnIndexOrThrow(AddActivity.DB_NOTIFY));
-            date_Time = cursor1.getString(cursor1.getColumnIndexOrThrow(AddActivity.DB_DATE_TIME));
-
-
-            Calendar c;
+            edate = eventdatelist.get(i).date;
+            ey = Integer.parseInt(eventdatelist.get(i).year);
+            em = Integer.parseInt(eventdatelist.get(i).month);
+            ed = Integer.parseInt(eventdatelist.get(i).day);
+            //cursor1 = db.query(AddActivity.DB_TABLE, projection, AddActivity.DB_DATE+" = \""+edate+"\"", null, null, null,null);
+            notify = eventdatelist.get(i).notify;
+            ehrs = Integer.parseInt(eventdatelist.get(i).hrs);
+            emin = Integer.parseInt(eventdatelist.get(i).min);
+            date_Time = eventdatelist.get(i).date_time;
+            uuid = eventdatelist.get(i).uniqueID;
 
             ContentValues values = new ContentValues();
 
             if(notify.equals("ONCE")){
                 db.delete(AddActivity.DB_TABLE, AddActivity.DB_DATE+" = \""+edate+"\"", null);
+                continue;//deleting a row means that we dont need to update it so we are going to the net element of the array-list immediately aft deleting
             }
-            if(notify.equalsIgnoreCase("Daily")) {
+            if(notify.equalsIgnoreCase("Daily")) {//we need to check whether the current day event "time" have been overcome
                 c = Calendar.getInstance();
-                //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                c.add(Calendar.DATE, 1);  // number of days to add
-                //edate = sdf.format(c.getTime());  // edate is now the new date
+                c.add(Calendar.DATE, 1);  // number of days to add//
 
                 //updating the database
                 values.put(AddActivity.DB_DAY,c.get(Calendar.DATE)+"");
                 values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
                 values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
                 values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE));
-                values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE)+date_Time.substring(10));
+                values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE)+" "+date_Time.substring(10));
 
             }
             if(notify.equalsIgnoreCase("Weekly")){
+                c = Calendar.getInstance();
+                c.add(Calendar.DATE, 6);  // number of days to add
 
+                //updating the database
+                values.put(AddActivity.DB_DAY,c.get(Calendar.DATE)+"");
+                values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
+                values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
+                values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE));
+                values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE)+" "+date_Time.substring(10));
             }
             if(notify.equals("MONTHLY")){
+                c = Calendar.getInstance();
+                if(c.get(Calendar.DATE)==1){
+                    values.put(AddActivity.DB_DAY,ed+"");
+                    values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
+                    values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
+                    values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+eventdatelist.get(i).day);
+                    values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+eventdatelist.get(i).day+" "+date_Time.substring(10));
+
+                } else {
+                    c.add(Calendar.MONTH, 1);  // number of days to add
+
+                    //updating the database
+                    values.put(AddActivity.DB_DAY,ed+"");
+                    values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
+                    values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
+                    values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+ed);
+                    values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+ed+" "+date_Time.substring(10));
+                }
 
             }
-            if(notify.equals("YEARLY")){n_ey1=n_ey;
-                if(isLeap(n_ey)) {
-                    n_ey1+=4;
+            if(notify.equals("YEARLY")){//alright
+                if(isLeap(ey)) {
+                    ey=ey+4;
                 }else {
-                    while (!ifIsSmall(n_ed, n_em, n_ey)) {
-                        n_ey1++;
+                    while (!ifIsSmall(ed, em, ey)) {//need to modify
+                        ey+=1;
                     }
                 }
-                values.put(AddActivity.DB_YEAR,n_ey1+"");
-                values.put(AddActivity.DB_DATE,(n_ey1+"")+"-"+edate.substring(5, 7)+"-"+edate.substring(8, 10));
-                values.put(AddActivity.DB_DATE_TIME,(n_ey1+"")+date_Time.substring(4));
+                values.put(AddActivity.DB_YEAR,ey+"");
+                values.put(AddActivity.DB_DATE,(ey+"")+"-"+edate.substring(5, 7)+"-"+edate.substring(8, 10));
+                values.put(AddActivity.DB_DATE_TIME,(ey+"")+date_Time.substring(4));
             }
-            db.update(AddActivity.DB_TABLE, values,null,null);
+            db.update(AddActivity.DB_TABLE, values,AddActivity.DB_UNIQUEID+" = \""+uuid+"\"",null);
         }
     }
 
@@ -174,10 +205,9 @@ public class OneActivity extends AppCompatActivity {
         return ifsmall;
     }
     private boolean isLeap(int year) {
-
         return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
     }
-    private int dayNo(int ed, int em, int ey){
+    /*private int dayNo(int ed, int em, int ey){
         int days[]={0,31,28,31,30,31,30,31,31,30,31,30,31};
         int no=0;
         if(isLeap(em))
@@ -186,7 +216,7 @@ public class OneActivity extends AppCompatActivity {
             no = no + days[i];
         no = no + ed;
         return no;
-    }
+    }*/
 
 
     public void onClickAddConstraint(View view){
