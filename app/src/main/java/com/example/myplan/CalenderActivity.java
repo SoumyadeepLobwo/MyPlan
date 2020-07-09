@@ -3,7 +3,7 @@ package com.example.myplan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
+//import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -173,8 +173,8 @@ public class CalenderActivity extends AppCompatActivity {
 
                 data.add(newEvent);
             }
+            cursor.close();
         }
-        cursor.close();
     }
 
     public void onClickCalenderActPrev(View view){ onBackPressed();   }

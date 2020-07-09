@@ -7,14 +7,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.SparseArray;
+//import android.util.SparseArray;
 import android.view.View;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+//import java.util.Date;
 import java.util.List;
 
 public class OneActivity extends AppCompatActivity {
@@ -96,18 +93,18 @@ public class OneActivity extends AppCompatActivity {
                 e.notify = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_NOTIFY));
                 e.uniqueID = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_UNIQUEID));
 
-                if(ifIsSmall(Integer.parseInt(e.day),Integer.parseInt(e.month),Integer.parseInt(e.year)) == true)//condition to check if the date is before current date. returns false if the passed date matches the
+                if(ifIsSmall(Integer.parseInt(e.day), Integer.parseInt(e.month), Integer.parseInt(e.year)))//condition to check if the date is before current date. returns false if the passed date matches the
                     //current date or exceeds it
                 {
                     eventdatelist.add(e); // extracting all the objects of events prior to the events of current day
                 }
             }//ending the while loop
+            cursor.close();//closing the cursor
         }
-        cursor.close();
 
         //Cursor cursor1;
         String edate, notify,date_Time,uuid;
-        int ey,em,ed,emin,ehrs;
+        int ey,em,ed;//emin,ehrs;
         Calendar c;
         for(int i = 0; i < eventdatelist.size(); i++)
         {
@@ -117,8 +114,8 @@ public class OneActivity extends AppCompatActivity {
             ed = Integer.parseInt(eventdatelist.get(i).day);
             //cursor1 = db.query(AddActivity.DB_TABLE, projection, AddActivity.DB_DATE+" = \""+edate+"\"", null, null, null,null);
             notify = eventdatelist.get(i).notify;
-            ehrs = Integer.parseInt(eventdatelist.get(i).hrs);
-            emin = Integer.parseInt(eventdatelist.get(i).min);
+            //ehrs = Integer.parseInt(eventdatelist.get(i).hrs);
+            //emin = Integer.parseInt(eventdatelist.get(i).min);
             date_Time = eventdatelist.get(i).date_time;
             uuid = eventdatelist.get(i).uniqueID;
 
@@ -197,10 +194,8 @@ public class OneActivity extends AppCompatActivity {
             }
         } else if (ey == cy && em < cm) {
             ifsmall = true;
-        } else if (ey > cy) {
+        } else if (ey < cy) {
             ifsmall = true;
-        } else if(ey < cy) {
-            ifsmall = false;
         }
         return ifsmall;
     }
