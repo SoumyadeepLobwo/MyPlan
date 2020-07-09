@@ -127,7 +127,7 @@ public class OneActivity extends AppCompatActivity {
             }
             if(notify.equalsIgnoreCase("Daily")) {//we need to check whether the current day event "time" have been overcome
                 c = Calendar.getInstance();
-                c.add(Calendar.DATE, 1);  // number of days to add//
+                //c.add(Calendar.DATE, 1);  // number of days to add//
 
                 //updating the database
                 values.put(AddActivity.DB_DAY,c.get(Calendar.DATE)+"");
