@@ -2,13 +2,13 @@ package com.example.myplan;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
+//import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
+//import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
+//import android.os.Environment;
+//import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -96,6 +96,7 @@ public class AddActivity extends AppCompatActivity {
         min1 = findViewById(R.id.add_time_2_edit_text);
         min = min1.getText().toString();
 
+        //CHECKING ALL THE CONDITIONS
         boolean validity = true;
 
         if(description.equals("") || day.equals("") || hrs.equals("") || min.equals("") || ampm.equals("") || notify.equals("")) {
@@ -107,7 +108,8 @@ public class AddActivity extends AppCompatActivity {
         //checking date validity
         if (!isLeap(Integer.parseInt(year))) {
             if ((month.equals("2") || month.equals("02")) && Integer.parseInt(day) > 28) {
-                Toast.makeText(AddActivity.this, "Invalid day as " + year + " is not a leap year", Toast.LENGTH_SHORT).show(); validity = false;
+                Toast.makeText(AddActivity.this, "Invalid day as " + year + " is not a leap year", Toast.LENGTH_SHORT).show();
+                validity = false;
             }
         }
         if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12) {
@@ -129,26 +131,38 @@ public class AddActivity extends AppCompatActivity {
             validity = false;
         }
         //checking time validity
+        if(Integer.parseInt(hrs) > 12) {
+            Toast.makeText(AddActivity.this, "Hrs should be in 12-hour format", Toast.LENGTH_SHORT).show();
+            validity = false;
+        }
+        if(Integer.parseInt(hrs)<0) {
+            Toast.makeText(AddActivity.this, "Hrs cannot be negative", Toast.LENGTH_SHORT).show();
+            validity = false;
+        }
+        if(Integer.parseInt(min)>59 || Integer.parseInt(min)<0) {
+            Toast.makeText(AddActivity.this, "Minutes out of range", Toast.LENGTH_SHORT).show();
+            validity = false;
+        }
 
-        if(!validity) return;
+        if(!validity) return;//returns if any of the above conditions are nto met
 
         //adding the day, month and year to form a single date
         if (Integer.parseInt(day) >= 1 && Integer.parseInt(day) <= 9)
-            day_1 = "0" + day;
+            day_1 = "0" + Integer.parseInt(day);
         else
             day_1 = day;
         if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 9)
-            month_1 = "0" + month;
+            month_1 = "0" + Integer.parseInt(month);
         else
             month_1 = month;
         date = year + "-" + month_1 + "-" + day_1;//forming the sql format date
 
         if (Integer.parseInt(hrs) >= 1 && Integer.parseInt(hrs) <= 9)
-            hrs_1 = "0" + hrs;
+            hrs_1 = "0" + Integer.parseInt(hrs);
         else
             hrs_1 = hrs;
         if (Integer.parseInt(min) >= 1 && Integer.parseInt(min) <= 9)
-            min_1 = "0" + min;
+            min_1 = "0" + Integer.parseInt(min);
         else min_1 = min;
         //converting from 12 hr format to 24 hr format by checking conditions
         if (ampm.equals("P.M.")) {
@@ -206,13 +220,9 @@ public class AddActivity extends AppCompatActivity {
 
         onBackPressed();
 
-
     }
     private boolean isLeap(int year){
 
-        if (((year % 4 == 0) && (year % 100!= 0)) || (year%400 == 0))
-            return  true;
-        else
-            return false;
+        return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
     }
 }

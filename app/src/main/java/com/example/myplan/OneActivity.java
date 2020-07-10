@@ -106,6 +106,7 @@ public class OneActivity extends AppCompatActivity {
         String edate, notify,date_Time,uuid;
         int ey,em,ed;//emin,ehrs;
         Calendar c;
+        String dayUp,monthUp;
         for(int i = 0; i < eventdatelist.size(); i++)
         {
             edate = eventdatelist.get(i).date;
@@ -130,29 +131,55 @@ public class OneActivity extends AppCompatActivity {
                 //c.add(Calendar.DATE, 1);  // number of days to add//
 
                 //updating the database
-                values.put(AddActivity.DB_DAY,c.get(Calendar.DATE)+"");
-                values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
+                if(c.get(Calendar.DATE)<10)
+                    dayUp = "0"+c.get(Calendar.DATE);
+                else
+                    dayUp = c.get(Calendar.DATE)+"";
+                if((c.get(Calendar.MONTH)+1)<10)
+                    monthUp = "0"+c.get(Calendar.MONTH);
+                else
+                    monthUp = (c.get(Calendar.MONTH)+1)+"";
+
+                values.put(AddActivity.DB_DAY,dayUp);
+                values.put(AddActivity.DB_MONTH,monthUp);
                 values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
-                values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE));
-                values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE)+" "+date_Time.substring(10));
+                values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+monthUp+"-"+dayUp);
+                values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+monthUp+"-"+dayUp+" "+date_Time.substring(10));
 
             }
             if(notify.equalsIgnoreCase("Weekly")){
                 c = Calendar.getInstance();
                 c.add(Calendar.DATE, 6);  // number of days to add
 
-                //updating the database
-                values.put(AddActivity.DB_DAY,c.get(Calendar.DATE)+"");
-                values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
+            //updating the database
+                if(c.get(Calendar.DATE)<10)
+                    dayUp = "0"+c.get(Calendar.DATE);
+                else
+                    dayUp = c.get(Calendar.DATE)+"";
+                if((c.get(Calendar.MONTH)+1)<10)
+                    monthUp = "0"+(c.get(Calendar.MONTH)+1);
+                else
+                    monthUp = (c.get(Calendar.MONTH)+1)+"";
+
+                values.put(AddActivity.DB_DAY,dayUp);
+                values.put(AddActivity.DB_MONTH,monthUp);
                 values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
-                values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE));
-                values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE)+" "+date_Time.substring(10));
+                values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+monthUp+"-"+dayUp);
+                values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+monthUp+"-"+dayUp+" "+date_Time.substring(10));
             }
             if(notify.equals("MONTHLY")){
                 c = Calendar.getInstance();
                 if(c.get(Calendar.DATE)==1){
-                    values.put(AddActivity.DB_DAY,ed+"");
-                    values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
+                    if(ed<10)
+                        dayUp = "0"+ed;
+                    else
+                        dayUp = ed+"";
+                    if((c.get(Calendar.MONTH)+1)<10)
+                        monthUp = "0"+(c.get(Calendar.MONTH)+1);
+                    else
+                        monthUp = (c.get(Calendar.MONTH)+1)+"";
+                    values.put(AddActivity.DB_DAY, dayUp);
+                    values.put(AddActivity.DB_MONTH,monthUp);
                     values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
                     values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+eventdatelist.get(i).day);
                     values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+eventdatelist.get(i).day+" "+date_Time.substring(10));
@@ -161,11 +188,20 @@ public class OneActivity extends AppCompatActivity {
                     c.add(Calendar.MONTH, 1);  // number of days to add
 
                     //updating the database
-                    values.put(AddActivity.DB_DAY,ed+"");
-                    values.put(AddActivity.DB_MONTH,c.get(Calendar.MONTH)+1+"");
+                    if(ed<10)
+                        dayUp = "0"+ed;
+                    else
+                        dayUp = ed+"";
+                    if((c.get(Calendar.MONTH)+1)<10)
+                        monthUp = "0"+(c.get(Calendar.MONTH)+1);
+                    else
+                        monthUp = (c.get(Calendar.MONTH)+1)+"";
+
+                    values.put(AddActivity.DB_DAY,dayUp);
+                    values.put(AddActivity.DB_MONTH,monthUp);
                     values.put(AddActivity.DB_YEAR,c.get(Calendar.YEAR)+"");
-                    values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+ed);
-                    values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+ed+" "+date_Time.substring(10));
+                    values.put(AddActivity.DB_DATE,c.get(Calendar.YEAR)+"-"+monthUp+"-"+dayUp);
+                    values.put(AddActivity.DB_DATE_TIME,c.get(Calendar.YEAR)+"-"+monthUp+"-"+dayUp+" "+date_Time.substring(10));
                 }
 
             }

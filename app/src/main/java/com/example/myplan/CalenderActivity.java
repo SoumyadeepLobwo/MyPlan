@@ -40,6 +40,10 @@ public class CalenderActivity extends AppCompatActivity {
         if(Integer.parseInt(m)<10) m = "0"+m;
         selectedDate = y+"-"+m+"-"+d;// this gets stored as the default current date until another date is clicked on the calendar view
 
+        //marking the date containing events
+
+        //finished marking dates containing events
+
 
         CalendarView calendarView = findViewById(R.id.calendarView);
         //this line set the listener to the calender veiw which listens to the made changes if any

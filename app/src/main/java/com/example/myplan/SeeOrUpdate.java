@@ -3,11 +3,11 @@ package com.example.myplan;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
-import android.content.Intent;
+//import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.MediaStore;
+//import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -77,11 +77,10 @@ public class SeeOrUpdate extends AppCompatActivity {
         String order = AddActivity.DB_DATE + " ASC";//represents the order in which we want to sort the data in the table
 
         //accessing the uuid value stored in intent in yourEvent activity
-        uuid = getIntent().getStringExtra("uuid");
+        uuid = getIntent().getStringExtra("uuid");//this is the uniqueId passed from YourEvent Activity
 
         Cursor cursor = db.query(AddActivity.DB_TABLE, projection, null, null, null, null, order);
-        //Event event = new Event();
-        String uniqueID;
+        String uniqueID;//to store the uniqueId that is extracted from the database for comparing
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 uniqueID = cursor.getString(cursor.getColumnIndexOrThrow(AddActivity.DB_UNIQUEID));
@@ -100,6 +99,7 @@ public class SeeOrUpdate extends AppCompatActivity {
                     break;
                 }
             }
+            cursor.close();
         }
         description1 = findViewById(R.id.add_edit_text);
         description1.setText(description);
@@ -124,9 +124,6 @@ public class SeeOrUpdate extends AppCompatActivity {
         if(notify.equals("WEEKLY")) radioGroup.check(R.id.weekly_radio_button);
         if(notify.equals("MONTHLY")) radioGroup.check(R.id.monthly_radio_button);
         if(notify.equals("YEARLY")) radioGroup.check(R.id.yearly_radio_button);
-
-        //wht abt ampm and notification
-
 
         db.close();
     }
@@ -166,7 +163,7 @@ public class SeeOrUpdate extends AppCompatActivity {
             }
         }
         if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12) {
-            if ((month.equals("2") || month.equals("02")) && Integer.parseInt(day) < 1 || Integer.parseInt(day)>29) {
+            if ((month.equals("2") || month.equals("02")) && Integer.parseInt(day) < 1 || Integer.parseInt(day) > 29) {
                 Toast.makeText(SeeOrUpdate.this, "Invalid day", Toast.LENGTH_SHORT).show();
                 validity = false;
             }
@@ -175,8 +172,7 @@ public class SeeOrUpdate extends AppCompatActivity {
                     Toast.makeText(SeeOrUpdate.this, "Invalid day", Toast.LENGTH_SHORT).show();
                     validity = false;
                 }
-            }
-            else if (Integer.parseInt(month) == 4 || Integer.parseInt(month) == 6 || Integer.parseInt(month) == 9 || Integer.parseInt(month) == 11) {
+            } else if (Integer.parseInt(month) == 4 || Integer.parseInt(month) == 6 || Integer.parseInt(month) == 9 || Integer.parseInt(month) == 11) {
                 if (Integer.parseInt(day) < 1 && Integer.parseInt(day) > 30) {
                     Toast.makeText(SeeOrUpdate.this, "Invalid day", Toast.LENGTH_SHORT).show();
                     validity = false;
@@ -187,36 +183,48 @@ public class SeeOrUpdate extends AppCompatActivity {
             validity = false;
         }
         //checking time validity
+        if (Integer.parseInt(hrs) > 12) {
+            Toast.makeText(SeeOrUpdate.this, "Hrs should be in 12-hour format", Toast.LENGTH_SHORT).show();
+            validity = false;
+        }
+        if (Integer.parseInt(hrs) < 0) {
+            Toast.makeText(SeeOrUpdate.this, "Hrs cannot be negative", Toast.LENGTH_SHORT).show();
+            validity = false;
+        }
+        if (Integer.parseInt(min) > 59 || Integer.parseInt(min) < 0) {
+            Toast.makeText(SeeOrUpdate.this, "Minutes out of range", Toast.LENGTH_SHORT).show();
+            validity = false;
+        }
 
-        if(!validity) return;
+        if (!validity) return;
 
         //adding the day, month and year to form a single date
         if (Integer.parseInt(day) >= 1 && Integer.parseInt(day) <= 9)
-            day_1 = "0" + day;
+            day_1 = "0" + Integer.parseInt(day);
         else
             day_1 = day;
         if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 9)
-            month_1 = "0" + month;
+            month_1 = "0" + Integer.parseInt(month);
         else
             month_1 = month;
         date = year + "-" + month_1 + "-" + day_1;//forming the sql format date
 
         if (Integer.parseInt(hrs) >= 1 && Integer.parseInt(hrs) <= 9)
-            hrs_1 = "0" + hrs;
+            hrs_1 = "0" + Integer.parseInt(hrs);
         else
             hrs_1 = hrs;
         if (Integer.parseInt(min) >= 1 && Integer.parseInt(min) <= 9)
-            min_1 = "0" + min;
+            min_1 = "0" + Integer.parseInt(min);
         else min_1 = min;
         //converting from 12 hr format to 24 hr format by checking conditions
-        /*if (ampm.equals("P.M.")) {
+        if (ampm.equals("P.M.")) {
             if (!hrs_1.equals("12"))
                 hrs_1 = Integer.toString(Integer.parseInt(hrs) + 12);
         }
         if (ampm.equals("A.M.")) {
             if (hrs_1.equals("12"))
                 hrs_1 = "00";
-        }*/
+        }
 
         time = hrs_1 + ":" + min_1 + ":00";//time with hrs, min and also seconds asserted to be 00
 
@@ -236,9 +244,10 @@ public class SeeOrUpdate extends AppCompatActivity {
         values.put(AddActivity.DB_NOTIFY, notify);
         values.put(AddActivity.DB_AMPM, ampm);
 
-        db.update(AddActivity.DB_TABLE, values , AddActivity.DB_UNIQUEID+" = \""+uuid+"\"", null);
+        db.update(AddActivity.DB_TABLE, values, AddActivity.DB_UNIQUEID + " = \"" + uuid + "\"", null);
 
         onBackPressed();
+
     }
     public void onClickAddActPrev(View view)
     {
