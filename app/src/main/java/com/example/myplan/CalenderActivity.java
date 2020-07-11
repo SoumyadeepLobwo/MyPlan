@@ -13,8 +13,11 @@ import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+//import com.google.android.material.datepicker.MaterialCalendar;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+//import java.util.Date;
 import java.util.List;
 
 public class CalenderActivity extends AppCompatActivity {
@@ -40,11 +43,6 @@ public class CalenderActivity extends AppCompatActivity {
         if(Integer.parseInt(m)<10) m = "0"+m;
         selectedDate = y+"-"+m+"-"+d;// this gets stored as the default current date until another date is clicked on the calendar view
 
-        //marking the date containing events
-
-        //finished marking dates containing events
-
-
         CalendarView calendarView = findViewById(R.id.calendarView);
         //this line set the listener to the calender veiw which listens to the made changes if any
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -65,10 +63,7 @@ public class CalenderActivity extends AppCompatActivity {
                 //get data from db into events list
                 extractAndPopulateEventList();//this function is called only when another date is selected other wise the function call outside this function is executed
 
-                //adapter = new EventAdapter(CalenderActivity.this, data);
-                //ListView listView = findViewById(R.id.calendar_list_view);
-                //listView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();//to make the required changes
             }
         });
 
