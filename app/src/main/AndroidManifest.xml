@@ -3,6 +3,7 @@
     package="com.example.myplan">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -11,12 +12,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SeeOrUpdate"></activity>
+        <service
+            android:name=".NotifyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <receiver
+            android:name=".NotificationServiceStarterReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".NotificationEventReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".NotificationIntent"
+            android:exported="false" />
+
+        <activity android:name=".SeeOrUpdate" />
         <activity android:name=".CalenderActivity" />
-        <activity
-            android:name=".ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".YourEvent_Activity" />
         <activity android:name=".AddActivity" />
         <activity android:name=".OneActivity" />
