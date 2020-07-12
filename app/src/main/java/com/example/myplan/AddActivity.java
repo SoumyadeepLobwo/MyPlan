@@ -1,11 +1,24 @@
 package com.example.myplan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 //import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 //import android.content.Intent;
+import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 //import android.os.Environment;
 //import android.util.Log;
@@ -14,7 +27,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 public class AddActivity extends AppCompatActivity {
@@ -41,6 +56,46 @@ public class AddActivity extends AppCompatActivity {
     public String description, day, hrs, min, ampm = "", notify = "", month, year;
     public String day_1, month_1, hrs_1, min_1 = "";
     public String date = "", time = "",date_time = "";
+
+    private class NotifyWorker extends Worker {
+
+        public NotifyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+            super(context, workerParams);
+        }
+
+        @NonNull
+        @Override
+        public Result doWork() {
+            String CHANNEL_ID = "1";
+            Intent intent = new Intent(AddActivity.this,CalenderActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent,0);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(AddActivity.this, CHANNEL_ID)
+                    .setContentTitle("Event Alert")
+                    .setContentText("ABCD")
+                    .setSmallIcon(R.drawable.ic_baseline_calendar_today_24)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = "MyPlan Notification";
+                String description = "Notifies current events";
+
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+                channel.setDescription(description);
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(channel);
+            }
+            Notification notification = builder.build();//created the notification
+            notificationManager.notify(12, notification);
+
+            return Result.success();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,9 +273,41 @@ public class AddActivity extends AppCompatActivity {
         db.insertOrThrow(DB_TABLE, null, values);
         db.close();
 
+        //schedule notification
+        scheduleNotification();
+
         onBackPressed();
 
     }
+
+    private void scheduleNotification(){
+        final String workTag = "notificationWork";
+
+        //store DBEventID to pass it to the PendingIntent and open the appropriate event page on notification click
+        // we then retrieve it inside the NotifyWorker with:
+        // final int DBEventID = getInputData().getInt(DBEventIDTag, ERROR_VALUE);
+
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                .setInitialDelay(calculateDelay(), TimeUnit.MILLISECONDS)
+                .addTag(workTag)
+                .build();
+
+        WorkManager.getInstance(AddActivity.this).enqueue(notificationWork);
+    }
+    private long calculateDelay(){
+        Calendar eventcal = Calendar.getInstance();
+        eventcal.set(Calendar.SECOND, 0);
+        eventcal.set(Calendar.HOUR, Integer.parseInt(hrs_1));
+        eventcal.set(Calendar.MINUTE, Integer.parseInt(min_1));
+        eventcal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day_1));
+        eventcal.set(Calendar.MONTH, Integer.parseInt(month_1));
+        eventcal.set(Calendar.YEAR, Integer.parseInt(year));
+        Calendar today = Calendar.getInstance();
+
+        long diff = eventcal.getTime().getTime() - today.getTime().getTime();
+        return  diff > 0 ? diff : 0;
+    }
+
     private boolean isLeap(int year){
 
         return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);

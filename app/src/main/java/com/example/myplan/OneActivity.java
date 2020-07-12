@@ -262,7 +262,4 @@ public class OneActivity extends AppCompatActivity {
         Intent intent = new Intent(OneActivity.this, CalenderActivity.class);
         startActivity(intent);
     }
-    public void onClickNotify(View view){
-        //NotificationEventRecceiver.setupAlarm(getApplicationContext());
-    }
 }
